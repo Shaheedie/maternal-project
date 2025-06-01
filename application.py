@@ -50,6 +50,24 @@ if st.button("Predict Risk Level"):
     prediction = model.predict(input_data)[0]
     risk_label = le.inverse_transform([prediction])[0]
 
+    # 📌 Explain potential reason
+    reasons = []
+    if systolic_bp > 140 or diastolic_bp > 90:
+        reasons.append("High blood pressure")
+    if bs > 7.8:
+        reasons.append("Elevated blood sugar level")
+    if body_temp > 38:
+        reasons.append("Fever (high body temperature)")
+    if heart_rate > 100:
+        reasons.append("Increased heart rate")
+    if age > 40:
+        reasons.append("Higher maternal age")
+
+    if not reasons:
+        reasons.append("Overall health indicators are moderately balanced.")
+
+    reason_text = " | ".join(reasons)
+
     # 💡 Health Recommendation
     if risk_label == "Low":
         recommendation = (
@@ -68,4 +86,5 @@ if st.button("Predict Risk Level"):
         )
 
     st.success(f"Predicted Risk Level: **{risk_label}**")
+    st.info(f"🧾 **Possible Reasons:** {reason_text}")
     st.info(recommendation)
